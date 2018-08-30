@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'mysql687.loopia.se',
-	'username' => 'DBbanner@c233637',
-	'password' => 'admin1234',
-	'database' => 'cera_nu_db_17',
+	'hostname' => 'localhost',
+	'username' => 'homestead',
+	'password' => 'secret',
+	'database' => 'db_banner',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
