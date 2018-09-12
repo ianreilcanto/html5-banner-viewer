@@ -14,11 +14,24 @@
         <div class="widget-content nopadding">
           <form action="/client/insert_entry" method="post" class="form-horizontal">
               <div class="control-group">
-                  <label class="control-label">Name :</label>
+                  <label class="control-label">Company Name :</label>
                   <div class="controls">
-                    <input name="clientName" type="text" class="span9" placeholder="Name" />
+                    <input name="clientName" type="text" class="span9" placeholder="Name" required/>
                   </div>
               </div>
+              <div class="control-group">
+                  <label class="control-label">Username :</label>
+                  <div class="controls">
+                    <input name="username" type="text" class="span9" placeholder="Name" required/>
+                  </div>
+              </div>
+              <div class="control-group">
+                  <label class="control-label">Password :</label>
+                  <div class="controls">
+                    <input name="password" type="password" class="span9" placeholder="Name" required/>
+                  </div>
+              </div>
+              
               <div class="form-actions">
                   <button type="submit" class="btn btn-success">Save</button>
               </div>

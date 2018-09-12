@@ -16,13 +16,15 @@
 <body>
 
 <!--Header-part-->
-<div id="header">
-  <h1><a href="dashboard.html">Banner Previewer</a></h1>
+<div  id="header">
+  <!-- <h1><a href="dashboard.html">Banner Previewer</a></h1> -->
+  <h2 style="padding: 15px 50px"><?php echo $name; ?></h2>
 </div>
 
 <div id="user-nav" class="navbar navbar-inverse">
 	<ul class="nav">
-		<li><a href="<?php echo base_url()."dashboard/logout" ?>"><i class="icon-key"></i> Log Out</a></li>
+        <li><a href="<?php echo base_url()."dashboard/logout" ?>"><i class="icon-key"></i> Log Out</a></li>
+        <li><a data-toggle="modal" data-target="#settings" href="#"><i class="icon-cog"></i>Settings</a></li>
 	</ul>
 </div>
 <!--close-Header-part--> 
@@ -30,12 +32,11 @@
 
 <!--sidebar-menu-->
 <div id="sidebar"> <a href="#" class="visible-phone"><i class="icon icon-fullscreen"></i>Full width</a>
-  <ul>
-    <li><a href="<?php echo base_url(); ?>dashboard/admin"><i class="icon icon-plus"></i> <span>Add Client</span></a> </li>
-    <?php foreach ($clients as $key => $value) { ?>
-      <li><a href="<?php echo base_url(); ?>client/banner/<?php echo $value->Name."/".$value->id; ?>"><i class="icon icon-minus"></i> <span><?php echo $value->Name; ?></span></a> </li>
-    <?php  } ?>
-  </ul>
+    <ul>
+        <?php foreach ($banners as $key => $value) { ?>
+            <li class="banner" attr-id="<?php echo $value->id ?>"><a href="#"><i class="icon icon-minus"></i> <span><?php echo $value->name; ?></span></a> </li>
+        <?php } ?>
+    </ul>
 </div>
 
 

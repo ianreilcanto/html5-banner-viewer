@@ -7,8 +7,11 @@ class BannerModel extends CI_Model {
     {
         $this->db->where('id', $id);
         $query=$this->db->get('BANNER');
+       
 
-        return  $result=$query->result()[0];
+         $result =  $query->row_array();
+
+         return $result;
     }
 
     public function get_entriesByClient($id)
@@ -37,6 +40,17 @@ class BannerModel extends CI_Model {
 
         return  $result=$query->result();
     }
+
+    
+    public function get_banners($clientId){
+        $this->db->select("*");
+        $this->db->from("BANNER");
+        $this->db->where("CLIENT_id", $clientId);
+
+        $query = $this->db->get();    
+        if($query->num_rows() > 0)
+            return $query->result();
+}
 
    
 

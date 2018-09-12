@@ -18,14 +18,44 @@ class ClientModel extends CI_Model {
         return  $result=$query->result();
     }
 
-    public function insert_entry($clientName)
+    // public function hash($password){
+    //     return md5($password);
+    // }
+
+    public function insert_login_details($clientName, $username, $password){
+        $this->db->insert('LOGIN', array("name"=> $clientName, "username" => $username, "password" => $password, "type" => "client"));
+
+        return $this->db->insert_id();
+    }
+
+    public function insert_entry($clientName, $username, $password)
     {
+
+        $id = $this->insert_login_details($clientName, $username, $password);
+
+        if(!empty($id)){
+            $this->db->insert('CLIENT', array("name" => $clientName, "is_active" => TRUE, "date_added" => date("Y-m-d H:i:s"), "date_remove" => null, "info" => "", "login_id" => $id ));
+        }
        
-        $this->db->insert('CLIENT', array("name" => $clientName, "is_active" => TRUE, "date_added" => date("Y-m-d H:i:s"), "date_remove" => null, "info" => "" ));
+    
            
        
 
         //return something to identify if added
+    }
+
+    public function get_client($loginId){
+        $this->db->where('login_id', $loginId);
+        $query=$this->db->get('CLIENT');
+
+        return  $result=$query->result();
+    }
+
+    public function get_clientById($id){
+        $this->db->where('id', $id);
+        $query=$this->db->get('CLIENT');
+
+        return  $result=$query->row_array();
     }
 
     public function getName($clientName){

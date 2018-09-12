@@ -17,7 +17,7 @@
         <?php   
             $attributes = array('class' => 'form-vertical', 'id' => 'loginform');
 
-            echo form_open( base_url().'login/addClient', $attributes); 
+            echo form_open( base_url().'dashboard/process_login', $attributes); 
         ?>
              <!-- <img src="<?php echo base_url() ?>assets/img/logo.png" alt="Logo" /> -->
 				 <div class="control-group normal_text"> <h3>Banner Previewer</h3></div>

@@ -10,6 +10,8 @@ class Client extends CI_Controller {
         $this->load->model('clientModel');
         $this->load->model('loginmodel');
         $this->load->model('bannerModel');
+
+        $this->load->helper("file");
     }
 
 	public function index()
@@ -19,19 +21,23 @@ class Client extends CI_Controller {
 
     public function insert_entry()
     {
-        if(!isset($_SESSION['login_name'])){
+        if(!isset($_SESSION['data'])){
             redirect(base_url());
         }
+
+        
 
          if(isset($_POST['clientName'])){
 
             //check if name exist
 
             if(!$this->has_name($_POST['clientName'])){
-                $this->clientModel->insert_entry($_POST['clientName']);
-                redirect('/login/addClient');
+                $this->clientModel->insert_entry($_POST['clientName'], $_POST['username'], $_POST['password']);
+                redirect('/dashboard/admin');
+            
             }else{
-                redirect('/login/addClient');
+                redirect('/dashboard/admin');
+           
             }
 
                 
@@ -39,19 +45,31 @@ class Client extends CI_Controller {
          }
     }
 
+    public function editLogin(){
+        
+        $data = array(
+            'name' => $_POST['name'],
+            'username' => $_POST['username'],
+            'password' => $_POST['password']
+        );
+
+        $this->loginmodel->update_login_client($_POST["id"],$data);
+    }
+
     public function banner($clientName,$id){
 
-        if(!isset($_SESSION['login_name'])){
+        if(!isset($_SESSION['data'])){
             redirect(base_url());
         }
 
        $client =  $this->clientModel->get_entries();
        $banners = $this->bannerModel->get_entriesByClient($id);
+       $login = $this->loginmodel->get_loginByLoginId($client[0]->login_id);
 
        $headerData = array("clients" => $client);
 
 
-       $data = array( "title" => "Banner Area", "clientName" => $clientName, "clientId" => $id, "banners" => $banners );
+       $data = array( "title" => "Banner Area", "clientName" => $client[0]->Name, "clientId" => $id, "banners" => $banners, "login" => $login );
 
         $this->load->view("dashboard/header", $headerData);
             $this->load->view("main_content_client_banner", $data);
@@ -61,8 +79,11 @@ class Client extends CI_Controller {
     public function do_upload(){
 
       
-        $file_ext = array('js' , 'html');
+        $file_ext = array('js' , 'html', 'jpg','png', 'JPEG', 'JPG');
+        $img = array('jpg','png', 'JPEG', 'JPG');
         $fileName = array();
+
+   
 
         if (!empty($_FILES) && isset($_FILES['html_file']['name']) && !empty($_FILES['html_file']['name'])) {
 
@@ -82,7 +103,16 @@ class Client extends CI_Controller {
 
                 $uploadfile = $uploaddir1 . basename($file['name']);
 
-                if(in_array($this->getExt($file['name']), $file_ext)){        
+                if(in_array($this->getExt($file['name']), $file_ext)){      
+                    
+                    if(in_array($this->getExt($file['name']), $img)){
+
+                        if(!file_exists($uploaddir1."images/")){
+                            mkdir($uploaddir1."images/", 0777);
+                        }
+
+                        $uploadfile = $uploaddir1."images/". basename($file['name']);
+                    }
 
                     move_uploaded_file($file['tmp_name'], $uploadfile);
 
@@ -119,7 +149,7 @@ class Client extends CI_Controller {
              if(!empty($value))
                 return true;
              else
-             return false;
+                return false;
     }
 
     public function getExt($fileName){
@@ -131,9 +161,18 @@ class Client extends CI_Controller {
 
     public function remove(){
         $id = $_POST['client_id'];
+
+        $client = $this->clientModel->get_clientById($id);
+        $path = "banner_file/".$client["Name"]."/";
+
+        delete_files($path, true , false, 1);
+        
+        $this->loginmodel->removeById($client["login_id"]);
         $this->clientModel->removeById($id);
 
-        echo base_url()."login/addClient";
+        // rmdir($path);
+
+        echo base_url()."dashboard/admin";
     }
     
 }
